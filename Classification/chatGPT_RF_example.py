@@ -28,3 +28,10 @@ test_score = rf.score(X_test, y_test)
 
 print(f"Training accuracy: {train_score:.4f}")
 print(f"Testing accuracy: {test_score:.4f}")
+
+# Get feature importances
+importances = rf.feature_importances_
+
+# Print feature importances
+for i, feature in enumerate(X.columns):
+    print(f'{feature}: {importances[i]}')
