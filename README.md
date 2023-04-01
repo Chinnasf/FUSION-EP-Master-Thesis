@@ -15,7 +15,7 @@ $$
 $$
 
 
-has decreased with the updated database [DB5 version 2.3](https://dataspace.princeton.edu/handle/88435/dsp01m900nx49h) if the standard criterium for selecting the datapoints fo apply the regression remains the same. With ITER's design, it was noted that $\alpha_R \sim 2$; now, $\alpha_R \sim 1.5$.
+has decreased with the updated database [DB5 version 2.3](https://dataspace.princeton.edu/handle/88435/dsp01m900nx49h) if the standard criterium for selecting the datapoints to apply the regression remains the same. With ITER's design, it was noted that $\alpha_R \sim 2$; now, $\alpha_R \sim 1.5$.
 
 
 <p align="center">
