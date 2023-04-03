@@ -1,0 +1,4 @@
+### Group 1 | New points in DB5 that are decreasing alpha-R
+### Group 2 | New points in DB5 that are decreasing alpha-R, but not so much
+### Group 3 | New points in DB5 that doesn't decrease alpha-R
+### Group 4 | DB2
