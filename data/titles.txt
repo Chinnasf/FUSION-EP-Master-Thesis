@@ -1,4 +1,4 @@
-### Group 1 | New points in DB5 that are decreasing alpha-R
-### Group 2 | New points in DB5 that are decreasing alpha-R, but not so much
-### Group 3 | New points in DB5 that doesn't decrease alpha-R
-### Group 4 | DB2
+### Group 1 | New points in DB5 that are decreasing alpha-R | $\alpha_R \sim 0.6$
+### Group 2 | New points in DB5 that are decreasing alpha-R, but not so much | $\alpha_R \sim 1$
+### Group 3 | New points in DB5 that doesn't decrease alpha-R | $\alpha_R \sim 2$
+### Group 4 | DB2 | $\alpha_R \sim 2.2$
