@@ -48,10 +48,16 @@ def get_entropy_of_dataset(data, alpha = 0.5):
 
 	# COMPUTING ENTROPY OF DATASET
 
-	S_ij = S_ij_num + cp.asarray(S_ij_cat)
-	E_ij = sp.special.xlogy(S_ij, S_ij) + sp.special.xlogy(1-S_ij, 1-S_ij)
-	E_ij = cp.nan_to_num( cp.asarray(E_ij), nan=0.0)
-	E = - E_ij.sum()    
+	E_ij_cat = sp.special.xlogy(S_ij_cat, S_ij_cat) + sp.special.xlogy(1-S_ij_cat, 1-S_ij_cat)
+	E_ij_cat = cp.nan_to_num( cp.asarray(E_ij_cat), nan=0.0)
+	E_cat = - E_ij_cat.sum() 
+
+	E_ij_num = sp.special.xlogy(S_ij_num, S_ij_num) + sp.special.xlogy(1-S_ij_num, 1-S_ij_num)
+	E_ij_num = cp.nan_to_num( cp.asarray(E_ij_num), nan=0.0)
+	E_num = - E_ij_num.sum()
+
+	E = E_cat + E_num
+
 	return E
 
 
