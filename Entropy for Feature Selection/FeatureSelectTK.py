@@ -1,18 +1,19 @@
 import numpy as np 
 import pandas as pd
 import scipy as sp
+import cupy as cp
 import pdb # For debugging || pdb.set_trace()
-
 
 
 def get_entropy_of_dataset(data, alpha = 0.5):
 	"""
 	data: DataFrame, expected with scaled data.
 	alpha: parameter used to compute the numerical similarity. Default: 0.5.
+
+	Returns: Associated entropy to dataset
 	"""
 	N, M = data.shape
 	
-
 	num_features = data.select_dtypes(include=['int', 'float']).columns.tolist()
 	cat_features = data.select_dtypes(include=['object']).columns.tolist()
 
@@ -21,35 +22,37 @@ def get_entropy_of_dataset(data, alpha = 0.5):
 
 	# COMPUTING FOR NUMERICAL DATA
 
-	D = [0]*M
-	D_ij = np.zeros((N,N))
-	for k in range( len(num_features) ):
-		F_k  = num_data[ num_features[k] ].values
-		ΔF_k = (max(F_k) - min(F_k))
-		# D[k] = np.frompyfunc( lambda x,y: x-y, 2, 1).reduce( np.array( np.meshgrid(F_k,F_k) ) )
-		D[k] = np.subtract.outer(F_k,F_k)
-		D_k  = np.square( D[k]/ΔF_k ) 
-		D_ij = D_ij + D_k
+	# Precompute max and min values for each numerical feature
+	num_data_gpu = cp.asarray(num_data)
+	num_max = num_data_gpu[:, range(len(num_features))].max(axis=0)
+	num_min = num_data_gpu[:, range(len(num_features))].min(axis=0)
+	D_ij = cp.zeros((N, N))
+	for k in range(len(num_features)):
+		F_k = num_data_gpu[:, k]
+		Fk_norm = cp.divide(F_k, num_max[k] - num_min[k])
+		Fk_norm_col = Fk_norm[:, cp.newaxis]
+		D_ij += cp.square( Fk_norm_col - Fk_norm )
+	D_ij = cp.sqrt(D_ij)  # euclidean distance
+	S_ij_num = cp.exp(-alpha * D_ij)  # similarity
 
-	D_ij = np.sqrt(D_ij) # euclidean distance
-	S_ij_num = np.exp( - alpha * D_ij ) # similarity
 
 	# COMPUTING FOR CATEGORICAL DATA
-
-	S_ij_cat = np.zeros((N,N))
+	S_ij_cat = np.zeros((N, N))
 	for k in range(len(cat_features)):
-		F_k  = cat_data[ cat_features[k] ].values
-		d_ij = np.frompyfunc( lambda x,y: x==y, 2, 1).reduce( np.array( np.meshgrid(F_k,F_k) ) ).astype(int)
-		S_ij_cat = S_ij_cat + d_ij
-	S_ij_cat = S_ij_cat/M
+		F_k = cat_data[cat_features[k]].values
+		d_ij = np.array(F_k)[:, None] == np.array(F_k)[None, :]
+		S_ij_cat += d_ij.astype(int)
+
+	S_ij_cat = S_ij_cat / M
 
 
-	S_ij = S_ij_num + S_ij_num
+	# COMPUTING ENTROPY OF DATASET
 
+	S_ij = S_ij_num + cp.asarray(S_ij_cat)
 	E_ij = sp.special.xlogy(S_ij, S_ij) + sp.special.xlogy(1-S_ij, 1-S_ij)
+	E_ij = cp.nan_to_num( cp.asarray(E_ij), nan=0.0)
 	E = - E_ij.sum()    
 	return E
-
 
 
 def get_ranked_features(data, alpha=0.5):
@@ -58,7 +61,9 @@ def get_ranked_features(data, alpha=0.5):
 	associated to the removal of the feature.  
 
 	pd.Series is sorted as: 
-	from the most important to the least important features. 
+	from the most important to the least important features.
+
+	Returns Ranked Features 
 	"""	
 
 	E = np.zeros(data.shape[-1])
