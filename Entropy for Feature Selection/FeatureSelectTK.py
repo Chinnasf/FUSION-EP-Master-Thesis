@@ -1,8 +1,51 @@
 import numpy as np 
 import pandas as pd
 import scipy as sp
+import statsmodels.api as sm
 import cupy as cp
 import pdb # For debugging || pdb.set_trace()
+
+
+path = "../data/"
+DB2 = pd.read_csv(path+"DB2P8.csv")
+
+def get_regression(_R, withDB2=False):
+	"""
+	Computes OLS. It ineeds sto be specified if data already
+	contains DB2 shots or not. 
+
+	ASSUMING DATA IS ***NOT*** GIVEN IN LOG-SCALE
+
+	Returns:
+		data (DataFrame): the data used to compute OLS
+		regression: statsmodels.api for ODL;
+			use: regression.summary() to see OLS output.
+		n_,p_ (int, int): number of observations and columns in data.
+	"""
+
+	coeffs = ['IP', 'BT', 'NEL', 'PLTH', 'RGEO', 'KAREA', 'EPS', 'MEFF']
+
+	if withDB2:
+		data = _R.copy()
+	else:     
+		data = pd.concat([DB2, _R],
+						 axis=0, 
+						 ignore_index=True
+						)
+	Y_ = data[["TAUTH"]].apply(np.log).to_numpy()
+	# Adding a column for the intercept
+	_df = data[coeffs].apply(np.abs).apply(np.log)
+	_df.insert(
+		loc = 0, 
+		column = "intercept", 
+		value = np.ones(len(_df))
+	)
+	X_ = _df.to_numpy()
+	n_, p_ = X_.shape
+	model = sm.OLS(Y_,X_)
+	regression = model.fit()
+	return data, regression, (n_,p_)
+
 
 
 def get_entropy_of_dataset(data, alpha = 0.5):
