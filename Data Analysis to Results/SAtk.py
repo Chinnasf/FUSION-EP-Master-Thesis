@@ -62,6 +62,9 @@ def get_regression(_R, withDB2=False):
 			use: regression.summary() to see OLS output.
 		n_,p_ (int, int): number of observations and columns in data.
 	"""
+
+	coeffs = ['IP', 'BT', 'NEL', 'PLTH', 'RGEO', 'KAREA', 'EPS', 'MEFF']
+
 	if withDB2:
 		data = _R.copy()
 	else:     
