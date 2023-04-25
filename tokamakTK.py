@@ -220,16 +220,16 @@ def get_regression(_R, DB2, withDB2=False):
 
 
 def get_entropy_of_dataset(data, alpha = 0.5):
-    """
-    Computes the entropy of a given dataset using a combination of numerical and categorical data.
-    
-    Args:
-    data: A pandas DataFrame with the dataset to compute the entropy on.
-    alpha: A float used to compute the numerical similarity. Default: 0.5.
-    
-    Returns:
-    A float representing the entropy of the given dataset.
-    """	
+	"""
+	Computes the entropy of a given dataset using a combination of numerical and categorical data.
+	
+	Args:
+	data: A pandas DataFrame with the dataset to compute the entropy on.
+	alpha: A float used to compute the numerical similarity. Default: 0.5.
+	
+	Returns:
+	A float representing the entropy of the given dataset.
+	"""	
 	N, M = data.shape
 	
 	num_features = data.select_dtypes(include=['int', 'float']).columns.tolist()
