@@ -48,7 +48,15 @@ class HUEOrder:
 
 
 def clean_categorical_data(db5):
-	
+	"""
+	Clean categorical data in a pandas DataFrame by filling missing values and standardizing categories.
+
+	Args:
+	db5 (pandas.DataFrame): A pandas DataFrame with categorical columns to be cleaned.
+
+	Returns:
+	pandas.DataFrame: A cleaned pandas DataFrame with standardized categories and filled missing values.
+	"""	
 	DB5 = db5.copy()
 	
 	specific_categorical = ["PREMAG","HYBRID","CONFIG","ELMTYPE","ECHMODE",
@@ -84,14 +92,25 @@ def clean_categorical_data(db5):
 
 
 def encode_categorical_ohe(data):
-    encoder = OneHotEncoder()
-    transformed = encoder.fit_transform(data)
-    ohe_data = pd.DataFrame(transformed.toarray(),
-                         columns=encoder.get_feature_names_out( 
-                             data.columns
-                         )
-    )
-    return ohe_data
+	"""
+	Encodes categorical data using OneHotEncoder.
+
+	Parameters:
+	- data: pandas.DataFrame, the data to be encoded
+
+	Returns:
+	- ohe_data: pandas.DataFrame, the encoded data
+	"""
+	encoder = OneHotEncoder() # create a OneHotEncoder object
+	transformed = encoder.fit_transform(data) # fit and transform the data
+	ohe_data = pd.DataFrame(transformed.toarray(),
+						 columns=encoder.get_feature_names_out( 
+							 data.columns
+						 )
+	) # create a DataFrame with the encoded data and column names
+
+	return ohe_data
+
 
 
 
@@ -100,7 +119,29 @@ def impute_with_mean(series):
 
 
 def clean_numerical_data(data):
-
+	"""
+	GOAL: Fill-in NaN with values near the dates of the missing value. 
+	Takes a pandas dataframe with numerical data as input and performs the following operations:
+	* Creates a copy of the input dataframe.
+	* Converts the "DATE" column in the dataframe to a string and replaces 
+		any dates with a day value of 00 with the first day of the month.
+	* Converts the "DATE" column to a datetime object.
+	* Defines a list of imputation strategies.
+	* Identifies the columns with missing values.
+	* Creates new columns in the dataframe with the imputation strategies, based on the "DATE" column.
+	* Groups the dataframe by each imputation strategy and computes the mean for each group.
+	* Maps the mean value to any missing values in the corresponding columns.
+	* Imputes missing values in each imputation strategy using the mean value.
+	* Scales the numerical columns in the dataframe using StandardScaler.
+	* Drops the imputation strategy columns from the dataframe.
+	* Returns the cleaned and transformed dataframe.
+	
+	Parameters:
+	data (pandas.DataFrame): A pandas dataframe containing numerical data.
+	
+	Returns:
+	pandas.DataFrame: A cleaned and transformed pandas dataset.
+	"""
 	data_ = data.copy()
 
 	data_["DATE"] = data_["DATE"].astype(str).replace(r"(\d{6})00", r"\g<1>01", regex=True)	
@@ -179,12 +220,16 @@ def get_regression(_R, DB2, withDB2=False):
 
 
 def get_entropy_of_dataset(data, alpha = 0.5):
-	"""
-	data: DataFrame, expected with scaled data.
-	alpha: parameter used to compute the numerical similarity. Default: 0.5.
-
-	Returns: Associated entropy to dataset
-	"""
+    """
+    Computes the entropy of a given dataset using a combination of numerical and categorical data.
+    
+    Args:
+    data: A pandas DataFrame with the dataset to compute the entropy on.
+    alpha: A float used to compute the numerical similarity. Default: 0.5.
+    
+    Returns:
+    A float representing the entropy of the given dataset.
+    """	
 	N, M = data.shape
 	
 	num_features = data.select_dtypes(include=['int', 'float']).columns.tolist()
