@@ -78,6 +78,7 @@ def clean_categorical_data(db5):
 												"MARK",regex=True)
 
 	DB5["ICSCHEME"]   = DB5["ICSCHEME"].str.replace("OFF","NONE",regex=False)
+	DB5["HYBRID"]   = DB5["HYBRID"].str.replace("HYBRID","YES",regex=False)
 
 
 	DB5["EVAP"] = DB5["EVAP"].str.replace("CARBH","C-H",regex=True)
