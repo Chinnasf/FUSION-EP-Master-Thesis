@@ -125,7 +125,7 @@ def clean_numerical_data(data):
 	Takes a pandas dataframe with numerical data as input and performs the following operations:
 	* Creates a copy of the input dataframe.
 	* Converts the "DATE" column in the dataframe to a string and replaces 
-		any dates with a day value of 00 with the first day of the month.
+			any dates with a day value of 00 with the first day of the month.
 	* Converts the "DATE" column to a datetime object.
 	* Defines a list of imputation strategies.
 	* Identifies the columns with missing values.
