@@ -121,65 +121,46 @@ def impute_with_mean(series):
 
 def clean_numerical_data(data):
 	"""
-	GOAL: Fill-in NaN with values near the dates of the missing value. 
-	Takes a pandas dataframe with numerical data as input and performs the following operations:
-	* Creates a copy of the input dataframe.
-	* Converts the "DATE" column in the dataframe to a string and replaces 
-			any dates with a day value of 00 with the first day of the month.
-	* Converts the "DATE" column to a datetime object.
-	* Defines a list of imputation strategies.
-	* Identifies the columns with missing values.
-	* Creates new columns in the dataframe with the imputation strategies, based on the "DATE" column.
-	* Groups the dataframe by each imputation strategy and computes the mean for each group.
-	* Maps the mean value to any missing values in the corresponding columns.
-	* Imputes missing values in each imputation strategy using the mean value.
-	* Scales the numerical columns in the dataframe using StandardScaler.
-	* Drops the imputation strategy columns from the dataframe.
-	* Returns the cleaned and transformed dataframe.
-	
-	Parameters:
-	data (pandas.DataFrame): A pandas dataframe containing numerical data.
-	
+	Takes a DataFrame `data` with numerical data and returns a cleaned DataFrame with missing 
+	values filled using the mean value of that column for each year and month, followed by the mean 
+	value for each `tokamak`. The function then fills any remaining missing values with zeros 
+	and standardizes the numerical data. 
+
+	Args:
+	    data (pandas.DataFrame): A DataFrame with numerical data.
+
 	Returns:
-	pandas.DataFrame: A cleaned and transformed pandas dataset.
+	    pandas.DataFrame: A cleaned DataFrame with numerical data.
 	"""
-	data_ = data.copy()
+	df = data.copy()
 
-	data_["DATE"] = data_["DATE"].astype(str).replace(r"(\d{6})00", r"\g<1>01", regex=True)	
-	data_["DATE"] = pd.to_datetime(data_["DATE"], format="%Y%m%d")
+	# Passing DATE to datetime
+	df["DATE"] = df["DATE"].astype(str).replace(r"(\d{6})00", r"\g<1>01", regex=True)
+	# Data type per feature
+	num_features = df.select_dtypes(include=['int', 'float']).columns.tolist()    
+	df["DATE"] = pd.to_datetime(df["DATE"], format="%Y%m%d")
+	df['year'] = df['DATE'].dt.year
+	df['month'] = df['DATE'].dt.month
 
-	
-	strategy = ['3d', 'quarters', 'months', '2months', '5months', 'years']
-	columns_with_nan = data_.columns[data_.isnull().sum() > 0]
-	num_features = data_.select_dtypes(include=['int', 'float']).columns.tolist()
-	
-	data_[strategy[0]] = pd.PeriodIndex(data_.DATE, freq='3d')
-	data_[strategy[1]] = pd.PeriodIndex(data_.DATE, freq='Q')
-	data_[strategy[2]] = pd.PeriodIndex(data_.DATE, freq='M')
-	data_[strategy[3]] = pd.PeriodIndex(data_.DATE, freq='2M')
-	data_[strategy[4]] = pd.PeriodIndex(data_.DATE, freq='5M')
-	data_[strategy[5]] = pd.PeriodIndex(data_.DATE, freq='Y')
-	
-	
-	for tokamak in data_["TOK"].unique():
-		indx_tok = data_[data_['TOK'] == tokamak].index
-	
-		for i,period in enumerate(strategy):
-			result =  data_.groupby(period).mean(numeric_only=True)
-			result.index = result.index.astype(str)
-			mapping_dict = result.squeeze().to_dict()
-			for col_nan in columns_with_nan:
-				data_.loc[data_.index, col_nan] =  data_[period].astype(str).map( mapping_dict[col_nan] )
-			columns_with_nan = data_.columns[data_.isnull().sum() > 0]
-		
-		data_.loc[indx_tok, num_features] = data_[num_features].apply(impute_with_mean)
-	  
-	data_ = data_.drop(strategy, axis="columns")
-	data_ = data_[num_features]
-	data_ = StandardScaler().fit_transform(data_)
-	data_ = pd.DataFrame(data_, columns=num_features)
-		
-	return data_
+
+	for tokamak in df.TOK.unique():
+		for col in df.columns[df.isnull().sum() > 0]:
+			# Fill NA with mean per month and year:
+			tem = df.groupby(['year', 'month'])[[col]].mean().reset_index()
+			tem.rename(columns={col: f'{col}_mean'}, inplace=True)
+			# Merge and fill NA:
+			df = pd.merge(df, tem, how='left', on=['year', 'month'])
+			df.loc[df[col].isna(),col] = df[f'{col}_mean']
+			df.drop(f'{col}_mean', axis=1, inplace=True)
+	# Fill NA per tokamak
+	df.fillna(df.groupby("TOK").mean(numeric_only=True), inplace=True)
+	df = df[num_features]
+	# Fill NA with general table / zeros
+	#df = df.apply(lambda x: x.fillna(x.mean()))
+	df.fillna(0, inplace=True)
+	df = StandardScaler().fit_transform(df)
+	df = pd.DataFrame(df, columns=num_features)
+	return df
 
 def get_regression(_R, DB2, withDB2=False):
 	"""
