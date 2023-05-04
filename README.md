@@ -10,9 +10,9 @@ In this repository, you can see the main progress of my thesis. These analyses a
 
 The project consists on investigating why the dependence of the machine size $\alpha_R$, of the energy confinement time:
 
-\begin{equation}
+$$
     \tau_{E,th} = \alpha_0 \cdot I_P^{\alpha_I} \cdot B_t^{\alpha_B} \cdot n^{\alpha_n} \cdot P^{\alpha_P} \cdot R^{\alpha_R} \cdot \kappa^{\alpha_\kappa} \cdot \epsilon^{\alpha_\epsilon} \cdot M^{\alpha_M},
-\end{equation}
+$$
 
 
 has decreased with the updated database [DB5 version 2.3](https://dataspace.princeton.edu/handle/88435/dsp01m900nx49h) if the standard criterium for selecting the datapoints to apply the regression remains the same. With ITER's design, it was noted that $\alpha_R \sim 2$; now, $\alpha_R \sim 1.5$.
