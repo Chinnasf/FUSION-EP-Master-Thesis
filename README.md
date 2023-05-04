@@ -11,7 +11,7 @@ In this repository, you can see the main progress of my thesis. These analyses a
 The project consists on investigating why the dependence of the machine size $\alpha_R$, of the energy confinement time:
 
 \begin{equation}
-    \tau_{E,th} = \alpha_0 \cdot I_P^{\alpha_I} \cdot B_t^{\alpha_B} \cdot \bar{n}_e^{\alpha_n}  \cdot P^{\alpha_P}_{l,th} \cdot R^{\alpha_R}_{geo} \cdot \kappa^{\alpha_\kappa}_a \cdot \epsilon^{\alpha_\epsilon} \cdot M^{\alpha_M}_{eff},
+    \tau_{E,th} = \alpha_0 \cdot I_P^{\alpha_I} \cdot B_t^{\alpha_B} \cdot n^{\alpha_n} \cdot P^{\alpha_P} \cdot R^{\alpha_R} \cdot \kappa^{\alpha_\kappa} \cdot \epsilon^{\alpha_\epsilon} \cdot M^{\alpha_M},
 \end{equation}
 
 
