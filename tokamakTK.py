@@ -130,7 +130,7 @@ def clean_numerical_data(data):
 	    data (pandas.DataFrame): A DataFrame with numerical data.
 
 	Returns:
-	    pandas.DataFrame: A cleaned DataFrame with numerical data.
+	    pandas.DataFrame: A cleaned DataFrame with numerical data only.
 	"""
 	df = data.copy()
 
@@ -170,7 +170,7 @@ def get_regression(_R, DB2, withDB2=False):
 	ASSUMING DATA IS ***NOT*** GIVEN IN LOG-SCALE
 
 	Returns:
-		data (DataFrame): the data used to compute OLS
+		data (pandas.DataFrame): the data used to compute OLS
 		regression: statsmodels.api for ODL;
 			use: regression.summary() to see OLS output.
 		n_,p_ (int, int): number of observations and columns in data.
@@ -206,7 +206,7 @@ def get_entropy_of_dataset(data, alpha = 0.5):
 	Computes the entropy of a given dataset using a combination of numerical and categorical data.
 	
 	Args:
-	data: A pandas DataFrame with the dataset to compute the entropy on.
+	data: A pandas.DataFrame with the dataset to compute the entropy on.
 	alpha: A float used to compute the numerical similarity. Default: 0.5.
 	
 	Returns:
@@ -287,7 +287,7 @@ def scatter_data_comparison(data, params):
 	Plots a group comparison using scatter plots with multiple subplots.
 
 	Args:
-		data (list): containing two DataFrames to be compared. 
+		data (list of pandas.DataFrame): containing two pandas.DataFrames to be compared. 
 		params (dict) containing:
 			cat_params (list): List of categorical parameters for comparison.
 			xy_params (list): List of the columns names for x and y: scatter plot.
