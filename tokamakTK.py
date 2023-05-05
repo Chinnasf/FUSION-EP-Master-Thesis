@@ -365,6 +365,12 @@ def scatter_data_comparison(data, params):
 	y___label  = params["y___label"]
 	plot_size  = params["plot_size"]
 	legend_pos = params["legend_pos"]
+	legend_in_decreasing = params["legend_in_decreasing"]
+
+	if legend_in_decreasing:
+		locs = [legend_pos]*3 + ["upper right"]*3
+	else:
+		locs = ["upper right"]*3 + [legend_pos]*3
 
 	# Access updated default params
 	x__minmax  = default_params["x__minmax"]
@@ -383,12 +389,16 @@ def scatter_data_comparison(data, params):
 		data_ = data1.copy()
 		for i in range(len(cat_params)):
 			sns.scatterplot(data=data_, x=xy__params[0], y=xy__params[1], 
-							hue=cat_params[i], hue_order=HUE_ORDER[cat_params[i]], ax=axs[0,i], legend=False)
+							hue=cat_params[i], hue_order=HUE_ORDER[cat_params[i]], 
+							ax=axs[0,i], legend=legend_in_decreasing
+							)
 		data_ = data2.copy()
 		for j in range(len(cat_params)):
 			sns.scatterplot(data=data_, x=xy__params[0], y=xy__params[1], 
-							hue=cat_params[j], hue_order=HUE_ORDER[cat_params[j]], ax=axs[1,j])
-		locs = ["upper right"]*3 + [legend_pos]*3
+							hue=cat_params[j], hue_order=HUE_ORDER[cat_params[j]], 
+							ax=axs[1,j], legend=bool(1 - legend_in_decreasing)
+							)
+		
 		for i, ax in enumerate(axs.flatten()):
 			ax.ticklabel_format(style='sci', axis='both', scilimits=(0,0))
 			ax.tick_params(axis='x', labelsize=13)
