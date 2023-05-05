@@ -5,7 +5,7 @@ import pandas as pd
 import scipy as sp
 import statsmodels.api as sm
 import cupy as cp
-
+import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import seaborn as sns
@@ -43,6 +43,46 @@ class HUEOrder:
 
 
 ##################### FUNCTIONS ###################################################
+
+def get_colors_per_category(DB5):
+	TD_colors = plt.cm.get_cmap('flag', 20) #Paired, flag
+	colors_ = sns.color_palette('viridis', 20)
+	CSS_colors = [mcolors.to_hex(TD_colors(i)) for i in range(20)]
+
+	# Needed for Improved Visualization in 2D Plots
+	HUE_ORDER = {}
+
+	HUE_ORDER["ICSCHEME"] = dict(zip(sorted(DB5["ICSCHEME"].unique()), colors_[:len(DB5["ICSCHEME"].unique())]))
+	HUE_ORDER["ELMTYPE"] = dict(zip(sorted(DB5["ELMTYPE"].unique()), colors_[:len(DB5["ELMTYPE"].unique())]))
+	HUE_ORDER["HYBRID"] = dict(zip(sorted(DB5["HYBRID"].unique()), colors_[:len(DB5["HYBRID"].unique())]))
+	HUE_ORDER["AUXHEAT"] = dict(zip(sorted(DB5["AUXHEAT"].unique()), colors_[:len(DB5["AUXHEAT"].unique())]))
+	HUE_ORDER["DIVMAT"] = dict(zip(sorted(DB5["DIVMAT"].unique()), colors_[:len(DB5["DIVMAT"].unique())]))
+	HUE_ORDER["WALMAT"] = dict(zip(sorted(DB5["WALMAT"].unique()), colors_[:len(DB5["WALMAT"].unique())]))
+	HUE_ORDER["EVAP"] = dict(zip(sorted(DB5["EVAP"].unique()), colors_[:len(DB5["EVAP"].unique())]))
+	HUE_ORDER["ECHMODE"] = dict(zip(sorted(DB5["ECHMODE"].unique()), colors_[:len(DB5["ECHMODE"].unique())]))
+	HUE_ORDER["PELLET"] = dict(zip(sorted(DB5["PELLET"].unique()), colors_[:len(DB5["PELLET"].unique())]))
+	HUE_ORDER["CONFIG"] = dict(zip(sorted(DB5["CONFIG"].unique()), colors_[:len(DB5["CONFIG"].unique())]))
+	HUE_ORDER["LIMMAT"] = dict(zip(sorted(DB5["LIMMAT"].unique()), colors_[:len(DB5["LIMMAT"].unique())]))
+	HUE_ORDER["TOK"] = dict(zip(sorted(DB5["TOK"].unique()), colors_[:len(DB5["TOK"].unique())]))
+
+	# Needed for 3D plots
+	PX_ORDER = {}
+
+	PX_ORDER["ICSCHEME"] = dict(zip(sorted(DB5["ICSCHEME"].unique()), CSS_colors[:len(DB5["ICSCHEME"].unique())]))
+	PX_ORDER["ELMTYPE"] = dict(zip(sorted(DB5["ELMTYPE"].unique()), CSS_colors[:len(DB5["ELMTYPE"].unique())]))
+	PX_ORDER["HYBRID"] = dict(zip(sorted(DB5["HYBRID"].unique()), CSS_colors[:len(DB5["HYBRID"].unique())]))
+	PX_ORDER["AUXHEAT"] = dict(zip(sorted(DB5["AUXHEAT"].unique()), CSS_colors[:len(DB5["AUXHEAT"].unique())]))
+	PX_ORDER["DIVMAT"] = dict(zip(sorted(DB5["DIVMAT"].unique()), CSS_colors[:len(DB5["DIVMAT"].unique())]))
+	PX_ORDER["WALMAT"] = dict(zip(sorted(DB5["WALMAT"].unique()), CSS_colors[:len(DB5["WALMAT"].unique())]))
+	PX_ORDER["EVAP"] = dict(zip(sorted(DB5["EVAP"].unique()), CSS_colors[:len(DB5["EVAP"].unique())]))
+	PX_ORDER["ECHMODE"] = dict(zip(sorted(DB5["ECHMODE"].unique()), CSS_colors[:len(DB5["ECHMODE"].unique())]))
+	PX_ORDER["PELLET"] = dict(zip(sorted(DB5["PELLET"].unique()), CSS_colors[:len(DB5["PELLET"].unique())]))
+	PX_ORDER["CONFIG"] = dict(zip(sorted(DB5["CONFIG"].unique()), CSS_colors[:len(DB5["CONFIG"].unique())]))
+	PX_ORDER["LIMMAT"] = dict(zip(sorted(DB5["LIMMAT"].unique()), CSS_colors[:len(DB5["LIMMAT"].unique())]))
+	PX_ORDER["TOK"] = dict(zip(sorted(DB5["TOK"].unique()), CSS_colors[:len(DB5["TOK"].unique())]))
+
+	return (HUE_ORDER, PX_ORDER)
+
 
 
 
@@ -283,6 +323,9 @@ def get_ranked_features(data, alpha=0.5):
 
 
 def scatter_data_comparison(data, params):
+	import warnings
+	warnings.filterwarnings("ignore")
+	warnings.simplefilter("ignore")
 	"""
 	Plots a group comparison using scatter plots with multiple subplots.
 
@@ -321,6 +364,7 @@ def scatter_data_comparison(data, params):
 	x___label  = params["x___label"]
 	y___label  = params["y___label"]
 	plot_size  = params["plot_size"]
+	legend_pos = params["legend_pos"]
 
 	# Access updated default params
 	x__minmax  = default_params["x__minmax"]
@@ -331,43 +375,73 @@ def scatter_data_comparison(data, params):
 	fig_name__ = f"scatter_plot__{xy__params}__{cat_params}.pdf"  
 	
 	data1, data2 = data
-	
-	fig, axs = plt.subplots(2, len(cat_params), figsize=plot_size)
-	fig.subplots_adjust(hspace=0.4)
 
-	data_ = data1.copy()
-	for i in range(len(cat_params)):
-		sns.scatterplot(data=data_, x=xy__params[0], y=xy__params[1], 
-						hue=cat_params[i], hue_order=HUE_ORDER[cat_params[i]], ax=axs[0,i])
-	data_ = data2.copy()
-	for j in range(len(cat_params)):
-		sns.scatterplot(data=data_, x=xy__params[0], y=xy__params[1], 
-						hue=cat_params[j], hue_order=HUE_ORDER[cat_params[j]], ax=axs[1,j])
+	if len(cat_params) > 1:
+		fig, axs = plt.subplots(2, len(cat_params), figsize=plot_size)
+		fig.subplots_adjust(hspace=0.4)
 
-	for i, ax in enumerate(axs.flatten()):
-		ax.ticklabel_format(style='sci', axis='both', scilimits=(0,0))
-		ax.tick_params(axis='x', labelsize=13)
-		ax.tick_params(axis='y', labelsize=13)
-		ax.set_ylim(y__minmax[0],y__minmax[1])
-		ax.set_xlim(x__minmax[0],x__minmax[1])  
-		ax.set_xlabel("")
-		ax.set_ylabel("")
-		ax.legend(fontsize=11, title=(cat_params*2)[i])
+		data_ = data1.copy()
+		for i in range(len(cat_params)):
+			sns.scatterplot(data=data_, x=xy__params[0], y=xy__params[1], 
+							hue=cat_params[i], hue_order=HUE_ORDER[cat_params[i]], ax=axs[0,i], legend=False)
+		data_ = data2.copy()
+		for j in range(len(cat_params)):
+			sns.scatterplot(data=data_, x=xy__params[0], y=xy__params[1], 
+							hue=cat_params[j], hue_order=HUE_ORDER[cat_params[j]], ax=axs[1,j])
+		locs = ["upper right"]*3 + [legend_pos]*3
+		for i, ax in enumerate(axs.flatten()):
+			ax.ticklabel_format(style='sci', axis='both', scilimits=(0,0))
+			ax.tick_params(axis='x', labelsize=13)
+			ax.tick_params(axis='y', labelsize=13)
+			ax.set_ylim(y__minmax[0],y__minmax[1])
+			ax.set_xlim(x__minmax[0],x__minmax[1])  
+			ax.set_xlabel("")
+			ax.set_ylabel("")
+			ax.legend(fontsize=11, title=(cat_params*2)[i], loc=locs[i])
+		# Add text label for x-labels at the bottom of the plot
+		fig.text(0.5, 0.03, x___label, 
+				 ha='center', va='bottom', fontsize=15
+				)
+		# Add text label for y-labels at the left of the plot
+		fig.text(0.07, 0.5, y___label, 
+				 ha='left', va='center', rotation='vertical', fontsize=15
+				)
+		axs[0, 1].set_title("Decreasing Dataset\n", fontsize=18)
+		axs[1, 1].set_title("Unaffected Dataset\n", fontsize=18);
 
-	# Add text label for x-labels at the bottom of the plot
-	fig.text(0.5, 0.03, x___label, 
-			 ha='center', va='bottom', fontsize=15
-			)
+		if save_fig:
+			plt.savefig(fig_path+fig_name__+"."+fig_format, format=fig_format, dpi=800, bbox_inches='tight');
+			
+		return plt.show()
 
-	# Add text label for y-labels at the left of the plot
-	fig.text(0.07, 0.5, y___label, 
-			 ha='left', va='center', rotation='vertical', fontsize=15
-			)
+	else:
+		fig, axs = plt.subplots(1, 2, figsize=plot_size)
+		data_ = data1.copy()
+		sns.scatterplot(data=data_, x=xy__params[0], y=xy__params[1], s=90, hue=cat_params[0], hue_order=HUE_ORDER[cat_params[0]], ax=axs[0], legend=False)
+		data_ = data2.copy()
+		sns.scatterplot(data=data_, x=xy__params[0], y=xy__params[1], s=90, hue=cat_params[0], hue_order=HUE_ORDER[cat_params[0]], ax=axs[1])
+		axs[0].ticklabel_format(style='sci', axis='both', scilimits=(0,0))
+		axs[1].ticklabel_format(style='sci', axis='both', scilimits=(0,0))
+		axs[0].tick_params(axis='x', labelsize=13); axs[1].tick_params(axis='x', labelsize=13)
+		axs[0].tick_params(axis='y', labelsize=13); axs[1].tick_params(axis='y', labelsize=13)
+		axs[0].set_ylim(y__minmax[0],y__minmax[1]); axs[1].set_ylim(y__minmax[0],y__minmax[1])
+		axs[0].set_xlim(x__minmax[0],x__minmax[1]); axs[1].set_xlim(x__minmax[0],x__minmax[1])
+		axs[0].set_xlabel(""); axs[1].set_xlabel("")
+		axs[0].set_ylabel(""); axs[1].set_ylabel("")
+		axs[0].legend(fontsize=11, title=(cat_params*2)[0], loc='upper right')
+		axs[1].legend(fontsize=11, title=(cat_params*2)[0], loc=legend_pos)
+		# Add text label for x-labels at the bottom of the plot
+		fig.text(0.5, -0.05, x___label, 
+				 ha='center', va='bottom', fontsize=15
+				)
+		# Add text label for y-labels at the left of the plot
+		fig.text(0.07, 0.5, y___label, 
+				 ha='left', va='center', rotation='vertical', fontsize=15
+				)
+		axs[0].set_title("Decreasing Dataset\n", fontsize=20)
+		axs[1].set_title("Unaffected Dataset\n", fontsize=20);
 
-	axs[0, 1].set_title("Decreasing Dataset\n", fontsize=18)
-	axs[1, 1].set_title("Unaffected Dataset\n", fontsize=18);
+		if save_fig:
+			plt.savefig(fig_path+fig_name__+"."+fig_format, format=fig_format, dpi=800, bbox_inches='tight');
 
-	if save_fig:
-		plt.savefig(fig_path+fig_name__+"."+fig_format, format=fig_format, dpi=800, bbox_inches='tight');
-		
-	return plt.show()
+		return plt.show()
