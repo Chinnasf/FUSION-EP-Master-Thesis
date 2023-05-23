@@ -455,3 +455,32 @@ def scatter_data_comparison(data, params):
 			plt.savefig(fig_path+fig_name__+"."+fig_format, format=fig_format, dpi=800, bbox_inches='tight');
 
 		return plt.show()
+
+
+def get_multicollinearity_info(X, features):
+	"""
+	Input: X (np.array) (#observations x #regressors)
+	Return DataFrame with infor
+	"""
+	# rowvar=False indicates that each column represents a variable
+	cov_mat = np.cov(X.T)
+	eigenvals = np.linalg.eigvals(cov_mat)
+	_, sing_vals, _ = np.linalg.svd(X)
+
+	# Computing the condition index
+	condition_index = [ (sing_vals.max()/n) for n in sing_vals]
+
+	# Computing the VIF | variance inflation factors
+	from statsmodels.stats.outliers_influence import variance_inflation_factor
+	VIF = [variance_inflation_factor(X, col_indx) for col_indx in range(X.shape[-1])]
+
+	# Variance Decomposition | values above 0.5 or 0.6 are often considered relatively high
+	variance_decomposition = eigenvals / eigenvals.sum()
+
+	df = pd.DataFrame([eigenvals, condition_index]).T
+	df.index = features
+	df.columns = ["eigenvalues", "CI"]
+	df["VIF"] = VIF
+	df["VD"] = variance_decomposition
+
+	return df
