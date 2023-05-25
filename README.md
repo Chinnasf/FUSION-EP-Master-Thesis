@@ -1,5 +1,4 @@
-
-# Investigating the Dependence on Machine Size of the Energy Confinement in TOKAMAKs using Data-Driven Methods
+<h1><center>Investigating the Dependence on Machine Size of the Energy Confinement in TOKAMAKs using Data-Driven Methods</center></h1>
 
 ---
 ## [FUSION-EP master programme](https://www.em-master-fusion.org/), an Erasmus Mundus Joint Master Degree (EMJMD)
