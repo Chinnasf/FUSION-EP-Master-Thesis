@@ -9,6 +9,7 @@ import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import seaborn as sns
+import warnings
 
 from collections import Counter
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
@@ -285,17 +286,21 @@ def get_entropy_of_dataset(data, alpha = 0.5):
 		S_ij_cat += d_ij.astype(int)
 
 	S_ij_cat = S_ij_cat / M
+	S_ij_cat = cp.asarray(S_ij_cat)
 
 
 	# COMPUTING ENTROPY OF DATASET
 
 	warnings.filterwarnings("ignore")
 
-	E_ij_cat = np.log(S_ij_cat, S_ij_cat) + np.log(1-S_ij_cat, 1-S_ij_cat)
+	# Log_2 used for shannon entropy interpretation as bits.
+	# If log() is used, then shannon entropy is in nats.
+
+	E_ij_cat = cp.log2(S_ij_cat, S_ij_cat) + cp.log2(1-S_ij_cat, 1-S_ij_cat)
 	E_ij_cat = cp.nan_to_num( cp.asarray(E_ij_cat), nan=0.0)
 	E_cat = - E_ij_cat.sum() 
 
-	E_ij_num = np.log(S_ij_num, S_ij_num) + np.log(1-S_ij_num, 1-S_ij_num)
+	E_ij_num = cp.log2(S_ij_num, S_ij_num) + cp.log2(1-S_ij_num, 1-S_ij_num)
 	E_ij_num = cp.nan_to_num( cp.asarray(E_ij_num), nan=0.0)
 	E_num = - E_ij_num.sum()
 
