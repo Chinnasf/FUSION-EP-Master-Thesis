@@ -159,7 +159,7 @@ def impute_with_mean(series):
 	return series.fillna(series.mean())
 
 
-def clean_numerical_data(data):
+def clean_numerical_data(data, scaling=True):
 	"""
 	Takes a DataFrame `data` with numerical data and returns a cleaned DataFrame with missing 
 	values filled using the mean value of that column for each year and month, followed by the mean 
@@ -198,8 +198,9 @@ def clean_numerical_data(data):
 	# Fill NA with general table / zeros
 	#df = df.apply(lambda x: x.fillna(x.mean()))
 	df.fillna(0, inplace=True)
-	df = StandardScaler().fit_transform(df)
-	df = pd.DataFrame(df, columns=num_features)
+	if scaling:
+		df = StandardScaler().fit_transform(df)
+		df = pd.DataFrame(df, columns=num_features)
 	return df
 
 def get_regression(_R, DB2, withDB2=False):
@@ -288,13 +289,18 @@ def get_entropy_of_dataset(data, alpha = 0.5):
 
 	# COMPUTING ENTROPY OF DATASET
 
-	E_ij_cat = sp.special.xlogy(S_ij_cat, S_ij_cat) + sp.special.xlogy(1-S_ij_cat, 1-S_ij_cat)
+	warnings.filterwarnings("ignore")
+
+	E_ij_cat = np.log(S_ij_cat, S_ij_cat) + np.log(1-S_ij_cat, 1-S_ij_cat)
 	E_ij_cat = cp.nan_to_num( cp.asarray(E_ij_cat), nan=0.0)
 	E_cat = - E_ij_cat.sum() 
 
-	E_ij_num = sp.special.xlogy(S_ij_num, S_ij_num) + sp.special.xlogy(1-S_ij_num, 1-S_ij_num)
+	E_ij_num = np.log(S_ij_num, S_ij_num) + np.log(1-S_ij_num, 1-S_ij_num)
 	E_ij_num = cp.nan_to_num( cp.asarray(E_ij_num), nan=0.0)
 	E_num = - E_ij_num.sum()
+
+	warnings.simplefilter("default")
+
 
 	E = E_cat + E_num
 
