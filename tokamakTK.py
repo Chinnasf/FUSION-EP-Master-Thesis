@@ -204,42 +204,27 @@ def clean_numerical_data(data, scaling=True):
 		df = pd.DataFrame(df, columns=num_features)
 	return df
 
-def get_regression(_R, DB2, withDB2=False):
+def get_ECT_regression(data_, features=['IP', 'BT', 'NEL', 'PLTH', 'RGEO', 'KAREA', 'EPS', 'MEFF']):
 	"""
-	Computes OLS. It ineeds sto be specified if data already
-	contains DB2 shots or not. 
-
+	Computes OLS. for energy confinement time, given data_ (pd.DataFrame). 
 	ASSUMING DATA IS ***NOT*** GIVEN IN LOG-SCALE
 
 	Returns:
-		data (pandas.DataFrame): the data used to compute OLS
-		regression: statsmodels.api for ODL;
-			use: regression.summary() to see OLS output.
-		n_,p_ (int, int): number of observations and columns in data.
+		regression: statsmodels.api for ODL
+		(use: regression.summary() to see OLS output.)
 	"""
 
-	coeffs = ['IP', 'BT', 'NEL', 'PLTH', 'RGEO', 'KAREA', 'EPS', 'MEFF']
-
-	if withDB2:
-		data = _R.copy()
-	else:     
-		data = pd.concat([DB2, _R],
-						 axis=0, 
-						 ignore_index=True
-						)
-	Y_ = data[["TAUTH"]].apply(np.log).to_numpy()
+	data = data_.copy()
+	Y_ = np.log(data["TAUTH"])
 	# Adding a column for the intercept
-	_df = data[coeffs].apply(np.abs).apply(np.log)
-	_df.insert(
-		loc = 0, 
-		column = "intercept", 
-		value = np.ones(len(_df))
-	)
-	X_ = _df.to_numpy()
-	n_, p_ = X_.shape
+	X_ = sm.add_constant(np.log(data[features].apply(np.abs)))
+
+	# MODEL RECEIVES LOG DATA WITH INTERCEPT
+
 	model = sm.OLS(Y_,X_)
 	regression = model.fit()
-	return data, regression, (n_,p_)
+	
+	return regression
 
 
 
