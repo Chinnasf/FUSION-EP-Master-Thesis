@@ -206,7 +206,7 @@ def clean_numerical_data(data, scaling=True):
 
 def get_ECT_regression(data_, features=['IP', 'BT', 'NEL', 'PLTH', 'RGEO', 'KAREA', 'EPS', 'MEFF']):
 	"""
-	Computes OLS. for energy confinement time, given data_ (pd.DataFrame). 
+	Computes OLS. for energy confinement time (ECT), given data_ (pd.DataFrame). 
 	ASSUMING DATA IS ***NOT*** GIVEN IN LOG-SCALE
 
 	Returns:
