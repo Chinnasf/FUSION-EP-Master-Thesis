@@ -452,6 +452,7 @@ def scatter_data_comparison(data, params):
 
 		return plt.show()
 
+# A way to obtain info about multicollinearity
 
 def get_multicollinearity_info(X, features):
 	"""
@@ -481,6 +482,7 @@ def get_multicollinearity_info(X, features):
 
 	return df
 
+# Another way to obtain info about multicollinearity
 
 def prepare_data(data, 
 				 columns=['IP', 'BT', 'NEL', 'PLTH', 'RGEO', 'KAREA', 'EPS', 'MEFF'], 
