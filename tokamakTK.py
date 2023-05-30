@@ -502,7 +502,7 @@ def scale_data(df, centered=False, add_intercept=True):
 	"""
 	if centered:
 		df = df - df.describe().loc["mean"]
-	X  = (df / df.apply(lambda x: np.linalg.norm(x))).to_numpy()
+	X  = (df / df.apply(lambda x: np.linalg.norm(x)))
 	if add_intercept:
 		X = sm.add_constant(X)
 	return X
