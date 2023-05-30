@@ -168,10 +168,10 @@ def clean_numerical_data(data, scaling=True):
 	and standardizes the numerical data. 
 
 	Args:
-	    data (pandas.DataFrame): A DataFrame with numerical data.
+		data (pandas.DataFrame): A DataFrame with numerical data.
 
 	Returns:
-	    pandas.DataFrame: A cleaned DataFrame with numerical data only.
+		pandas.DataFrame: A cleaned DataFrame with numerical data only.
 	"""
 	df = data.copy()
 
@@ -480,3 +480,63 @@ def get_multicollinearity_info(X, features):
 	df["VD"] = variance_decomposition
 
 	return df
+
+
+def prepare_data(data, 
+				 columns=['IP', 'BT', 'NEL', 'PLTH', 'RGEO', 'KAREA', 'EPS', 'MEFF'], 
+				 add_intercept=True):
+	"""
+	Prepare data such tha the ECT regression can be assessed
+	"""
+	data = data[columns]
+	data = data.apply(np.abs).apply(np.log)
+	if add_intercept:
+		data = sm.add_constant(data)
+	return data
+
+def scale_data(df, centered=False):
+	"""
+	df (pd.DataFrame) containing the data numerical to be prepared for ECT analysis
+	"""
+	if centered:
+		df = df - df.describe().loc["mean"]
+	X  = (df / df.apply(lambda x: np.linalg.norm(x))).to_numpy()
+	return X
+
+def get_condition_number(X, scale=True):
+	if scale:
+		X = scale_data(X)
+	# Get Singular Values
+	_,S,_ = np.linalg.svd(X)
+	# Return condition index
+	return max(S)/min(S)
+
+def get_condition_index(X, scale=True):
+	if scale:
+		X = scale_data(X)
+	# Get Singular Values
+	_,S,_ = np.linalg.svd( X )
+	# Return condition indexes
+	return max(S)/S
+
+def get_pi_matrix(X, features, scale=True):
+	if scale:
+		X = scale_data(X)
+		
+	U,D,VT = np.linalg.svd( X ) # Transpose of V ----> ask Joe.
+	V_sq   = np.square(VT.T); mu_sq = np.square(D)
+
+	φ_kj   = np.zeros((len(features)+1,len(features)+1))
+	φ_k    = np.zeros(len(features)+1)
+	pi_jk  = np.zeros((len(features)+1,len(features)+1))
+
+	for k in range(len(features)):
+		φ_kj[k,:] = V_sq[k,:] / mu_sq
+		φ_k[k] = φ_kj[k,:].sum()
+		pi_jk[:,k]  = φ_kj[k,:] / φ_k[k]
+
+	# Pi-Matrix (Variance Decomposition)
+	Π = pd.DataFrame(pi_jk, 
+					 index=[f"μ{i}" for i in range(len(features)+1)], 
+					 columns=["intrcp"]+features) 
+	return Π
