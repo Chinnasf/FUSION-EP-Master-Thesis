@@ -496,13 +496,15 @@ def prepare_data(data,
 		data = sm.add_constant(data)
 	return data
 
-def scale_data(df, centered=False):
+def scale_data(df, centered=False, add_intercept=True):
 	"""
 	df (pd.DataFrame) containing the data numerical to be prepared for ECT analysis
 	"""
 	if centered:
 		df = df - df.describe().loc["mean"]
 	X  = (df / df.apply(lambda x: np.linalg.norm(x))).to_numpy()
+	if add_intercept:
+		X = sm.add_constant(X)
 	return X
 
 def get_condition_number(X, scale=True):
