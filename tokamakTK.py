@@ -507,9 +507,9 @@ def scale_data(df, centered=False, add_intercept=True):
 		X = sm.add_constant(X)
 	return X
 
-def get_condition_number(X, scale=True):
+def get_condition_number(X, scale=True, add_intercept=False):
 	if scale:
-		X = scale_data(X)
+		X = scale_data(X, centered=False, add_intercept=add_intercept)
 	# Get Singular Values
 	_,S,_ = np.linalg.svd(X)
 	# Return condition index
@@ -523,24 +523,29 @@ def get_condition_index(X, scale=True):
 	# Return condition indexes
 	return max(S)/S
 
-def get_pi_matrix(X, features, scale=True):
+def get_pi_matrix(X, features, scale=True, intercept=False):
 	if scale:
-		X = scale_data(X)
+		X = scale_data(X, centered=False, add_intercept=intercept)
+	cols = features
+	if intercept:
+		cols = ["intrcp"] + features
+	m = len(cols)
 		
 	U,D,VT = np.linalg.svd( X ) # Transpose of V ----> ask Joe.
 	V_sq   = np.square(VT.T); mu_sq = np.square(D)
 
-	φ_kj   = np.zeros((len(features)+1,len(features)+1))
-	φ_k    = np.zeros(len(features)+1)
-	pi_jk  = np.zeros((len(features)+1,len(features)+1))
+	φ_kj   = np.zeros((m,m))
+	φ_k    = np.zeros(m)
+	pi_jk  = np.zeros((m,m))
 
-	for k in range(len(features)):
+	for k in range(m):
 		φ_kj[k,:] = V_sq[k,:] / mu_sq
 		φ_k[k] = φ_kj[k,:].sum()
 		pi_jk[:,k]  = φ_kj[k,:] / φ_k[k]
 
 	# Pi-Matrix (Variance Decomposition)
 	Π = pd.DataFrame(pi_jk, 
-					 index=[f"μ{i}" for i in range(len(features)+1)], 
-					 columns=["intrcp"]+features) 
+					 index=[f"μ{i}" for i in range(m)], 
+					 columns=cols) 
+	print(f"Condition Number: {max(D)/min(D)}")
 	return Π
