@@ -260,6 +260,7 @@ def get_entropy_of_dataset(data, alpha = 0.5):
 		Fk_norm_col = Fk_norm[:, cp.newaxis]
 		D_ij += cp.square( Fk_norm_col - Fk_norm )
 	D_ij = cp.sqrt(D_ij)  # euclidean distance
+	# Modifying similarity for numerical stability
 	S_ij_num = cp.exp(-alpha * D_ij)  # similarity
 
 
@@ -281,15 +282,18 @@ def get_entropy_of_dataset(data, alpha = 0.5):
 	# Log_2 used for shannon entropy interpretation as bits.
 	# If log() is used, then shannon entropy is in nats.
 
-	E_ij_cat = cp.log2(S_ij_cat, S_ij_cat) + cp.log2(1-S_ij_cat, 1-S_ij_cat)
+	E_ij_cat = S_ij_cat*cp.log2(S_ij_cat) + (1-S_ij_cat)*cp.log2(1-S_ij_cat)
 	E_ij_cat = cp.nan_to_num( cp.asarray(E_ij_cat), nan=0.0)
 	E_cat = - E_ij_cat.sum() 
 
-	E_ij_num = cp.log2(S_ij_num, S_ij_num) + cp.log2(1-S_ij_num, 1-S_ij_num)
+	E_ij_num = S_ij_num*cp.log2(S_ij_num) + (1-S_ij_num)*cp.log2(1-S_ij_num)
 	E_ij_num = cp.nan_to_num( cp.asarray(E_ij_num), nan=0.0)
 	E_num = - E_ij_num.sum()
 
 	warnings.simplefilter("default")
+
+
+	#pdb.set_trace()
 
 
 	E = E_cat + E_num
