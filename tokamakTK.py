@@ -45,6 +45,19 @@ class HUEOrder:
 
 ##################### FUNCTIONS ###################################################
 
+
+def scale_data(df, centered=False, add_intercept=True):
+	"""
+	df (pd.DataFrame) containing the data numerical to be prepared for ECT analysis
+	"""
+	if centered:
+		df = df - df.describe().loc["mean"]
+	X  = (df / df.apply(lambda x: np.linalg.norm(x)))
+	if add_intercept:
+		X = sm.add_constant(X)
+	return X
+
+
 def get_colors_per_category(DB5):
 	TD_colors = plt.cm.get_cmap('flag', 20) #Paired, flag
 	colors_ = sns.color_palette('viridis', 20)
@@ -160,7 +173,7 @@ def impute_with_mean(series):
 	return series.fillna(series.mean())
 
 
-def clean_numerical_data(data, scaling=True):
+def clean_numerical_data(data, SS_scaling=True, UL_scale=False):
 	"""
 	Takes a DataFrame `data` with numerical data and returns a cleaned DataFrame with missing 
 	values filled using the mean value of that column for each year and month, followed by the mean 
@@ -199,9 +212,13 @@ def clean_numerical_data(data, scaling=True):
 	# Fill NA with general table / zeros
 	#df = df.apply(lambda x: x.fillna(x.mean()))
 	df.fillna(0, inplace=True)
-	if scaling:
+	#Application of Standard Scaling
+	if SS_scaling:
 		df = StandardScaler().fit_transform(df)
 		df = pd.DataFrame(df, columns=num_features)
+	#Application of Unit Length
+	if UL_scale:
+		df = scale_data(df, centered=False, add_intercept=False)
 	return df
 
 def get_ECT_regression(data_, features=['IP', 'BT', 'NEL', 'PLTH', 'RGEO', 'KAREA', 'EPS', 'MEFF']):
@@ -499,17 +516,6 @@ def prepare_data(data,
 	if add_intercept:
 		data = sm.add_constant(data)
 	return data
-
-def scale_data(df, centered=False, add_intercept=True):
-	"""
-	df (pd.DataFrame) containing the data numerical to be prepared for ECT analysis
-	"""
-	if centered:
-		df = df - df.describe().loc["mean"]
-	X  = (df / df.apply(lambda x: np.linalg.norm(x)))
-	if add_intercept:
-		X = sm.add_constant(X)
-	return X
 
 def get_condition_number(X, scale=True, add_intercept=False):
 	if scale:
