@@ -555,7 +555,7 @@ def get_pi_matrix(X, features, scale=True, intercept=False):
 
 	# Pi-Matrix (Variance Decomposition)
 	Π = pd.DataFrame(pi_jk, 
-					 index=[f"$\\mu_{i}$" for i in range(m)], 
+					 index=["$\\mu_{"+f"{i}"+"}$" for i in range(m)], 
 					 columns=cols) 
-	print(f"Condition Number: {max(D)/min(D)}")
+	print(f"Condition index: {max(D)/D}")
 	return Π
