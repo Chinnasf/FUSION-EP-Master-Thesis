@@ -23,6 +23,6 @@ has decreased with the updated database [DB5 version 2.3](https://dataspace.prin
 
 <p align="center">
 
-![Workflow](WORKFLOW.png)
+![Workflow](Workflow.png)
 
 </p>
