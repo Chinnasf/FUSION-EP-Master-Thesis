@@ -13,6 +13,7 @@ import warnings
 
 from collections import Counter
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 import pdb # For debugging || pdb.set_trace()
 
@@ -56,6 +57,24 @@ def scale_data(df, centered=False, add_intercept=True):
 	if add_intercept:
 		X = sm.add_constant(X)
 	return X
+
+def get_metrics_for_decreasing(model, X_test, y_test):
+	"""
+	Returns metrics for minority class (labelled as 1)
+	"""
+	predictions = model.predict(X_test)
+	minority_mask = y_test == 1
+	
+	minority_true_labels = y_test[minority_mask]
+	minority_predicted_labels = predictions[minority_mask]
+	
+	minority_accuracy  = np.round(accuracy_score(minority_true_labels, minority_predicted_labels), 2)
+	minority_precision = np.round(precision_score(y_test, predictions, pos_label=1), 2)
+	minority_recall    = np.round(recall_score(y_test, predictions, pos_label=1), 2)
+	minority_f1score   = np.round(f1_score(y_test, predictions, pos_label=1), 2)
+	#print("Minority Class\n")
+	#print(f"Acc: {minority_accuracy},\nPre: {minority_precision},\nRec: {minority_recall},\nF1s: {minority_f1score}")
+	return minority_accuracy, minority_precision, minority_recall, minority_f1score
 
 
 def get_colors_per_category(DB5):
