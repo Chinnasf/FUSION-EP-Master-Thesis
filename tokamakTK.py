@@ -23,10 +23,14 @@ import pdb # For debugging || pdb.set_trace()
 
 class MyCounter(Counter):
 	"""
-	Uses collections library tou output sorted Counter
+	Uses collections library to output sorted Counter
 	"""
+
 	def __str__(self):
-		return "\n".join('{}: {}'.format(k, v) for k, v in sorted(self.items()))
+		max_value = max(self.values())
+		normalized_items = ['{}: {:.2f}'.format(k, v / max_value) for k, v in sorted(self.items())]
+		return "\n".join(normalized_items)
+
 	
 class HUEOrder:
 	"""
