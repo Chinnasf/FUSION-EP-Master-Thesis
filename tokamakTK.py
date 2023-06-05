@@ -31,6 +31,14 @@ class MyCounter(Counter):
 		normalized_items = ['{}: {:.2f}'.format(k, v / max_value) for k, v in sorted(self.items())]
 		return "\n".join(normalized_items)
 
+def get_general_insight(data, DB5):
+    print(f"Missing Tokamaks: {DB5[~DB5.TOK.isin(data.TOK.unique())]['TOK'].unique()}")
+    print(f"Present Tokamaks: {data.TOK.unique()}")
+    print("\n")
+    print(f"ELMTYPE\n{MyCounter(data['ELMTYPE'])}")
+    print("\n")
+    print(f"PHASE\n{MyCounter(data['PHASE'])}")
+
 	
 class HUEOrder:
 	"""
@@ -79,6 +87,46 @@ def get_metrics_for_decreasing(model, X_test, y_test):
 	#print("Minority Class\n")
 	#print(f"Acc: {minority_accuracy},\nPre: {minority_precision},\nRec: {minority_recall},\nF1s: {minority_f1score}")
 	return minority_accuracy, minority_precision, minority_recall, minority_f1score
+
+
+def plot_tok_comparison(data1,data2,DB5):
+    tokamak = pd.DataFrame([
+        data1["TOK"].value_counts(),
+        data2["TOK"].value_counts()
+        ], index=["data1","data2"]
+    ).T.fillna(0.0)
+    tokamak = tokamak.sort_values("data2", ascending=False)
+    tokamak = (tokamak/len(DB5))*100
+
+    # create a figure with subplots
+    fig, ax = plt.subplots(figsize=(8, 4.7))
+
+    # define the x and y values for the bars
+    x = np.arange(len(tokamak.index))
+    width = 0.35
+    ax.bar(x + width/2, tokamak['data1'], width, color='salmon', label='$\\bf{Decreasing}\\:\\bf{Dataset}$')
+    ax.bar(x - width/2, tokamak['data2'], width, color='#A84547', label='Unaffected Dataset')
+
+
+    # set the x-axis tick labels
+    ax.set_xticks(x)
+    ax.set_xticklabels(tokamak.index, rotation=90)
+    ax.tick_params(axis="y", labelsize=12)
+
+    # Set the font weight of 'AUG' and 'MAST' to bold
+    for label in plt.gca().xaxis.get_ticklabels():
+        if label.get_text() in data1.TOK.unique():
+            label.set_fontweight('bold')
+
+    # set the y-axis label
+    ax.set_ylabel('Relative Counts to STDB5 [%]\n', fontsize=13)
+
+    # set the plot title and legend
+    ax.set_title('NEW SHOTS IN STDB5\n', fontsize=15)
+    ax.legend()
+
+    # display the plot
+    plt.show()
 
 
 def get_colors_per_category(DB5):
