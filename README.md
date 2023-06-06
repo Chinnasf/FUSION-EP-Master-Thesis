@@ -30,7 +30,10 @@ has decreased with the updated database [DB5 version 2.3](https://dataspace.prin
 ## Visualization of Some Results
 
 <p align="center">
-  <img src="https://github.com/Chinnasf/FUSION-EP-Master-Thesis/assets/31081252/d19a416b-769f-4973-b3ba-455004f50249" alt="change_in_NUSTAR_RHOSTAR_Q95">
+  <img src="https://github.com/Chinnasf/FUSION-EP-Master-Thesis/assets/31081252/ab0af563-b9bc-455d-95ef-cc54a79586a2" alt="change_in_NUSTAR_RHOSTAR_BETASTAR" >
+  <img src="https://github.com/Chinnasf/FUSION-EP-Master-Thesis/assets/31081252/d1779ba8-5f4f-4d95-ac00-0112ae7369db" alt="removeSPH_change_in_NUSTAR_RHOSTAR_BETASTAR" >
+  <br>
+  <em>Complete dataset (left) vs dataset without spherical tokamaks (right)</em>
 </p>
 
 
