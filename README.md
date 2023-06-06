@@ -22,11 +22,8 @@ has decreased with the updated database [DB5 version 2.3](https://dataspace.prin
 
 
 <p align="center">
-
 ![Workflow](Workflow.png)
-
 </p>
-![]()
 
 ## Visualization of Some Results
 
@@ -41,8 +38,6 @@ has decreased with the updated database [DB5 version 2.3](https://dataspace.prin
 
 Notice how spherical tokamaks can achieve notoriously high values of normalized plasma beta, compared to non-spherical ones. 
 
- <p align="center" width=300>
-    
-![3D_BETASTAR_NUSTAR_RHOSTAR](data/TOK/3D_BETASTAR_NUSTAR_RHOSTAR.png)
-
+<p align="center">
+  <img src="data/TOK/3D_BETASTAR_NUSTAR_RHOSTAR.png" alt="3D_BETASTAR_NUSTAR_RHOSTAR" width="400">
 </p>
