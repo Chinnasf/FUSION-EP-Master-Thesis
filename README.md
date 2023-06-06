@@ -37,3 +37,10 @@ has decreased with the updated database [DB5 version 2.3](https://dataspace.prin
 </p>
 
 
+Notice how spherical tokamaks can achieve notoriously high values of normalized plasma beta, compared to non-spherical ones. 
+
+ <p align="center">
+
+![3D_BETASTAR_NUSTAR_RHOSTAR](data/TOK/3D_BETASTAR_NUSTAR_RHOSTAR.png)
+
+</p>
