@@ -26,14 +26,16 @@ has decreased with the updated database [DB5 version 2.3](https://dataspace.prin
 ![Workflow](Workflow.png)
 
 </p>
+![]()
 
 ## Visualization of Some Results
 
 <p align="center">
   <img src="https://github.com/Chinnasf/FUSION-EP-Master-Thesis/assets/31081252/ab0af563-b9bc-455d-95ef-cc54a79586a2" alt="change_in_NUSTAR_RHOSTAR_BETASTAR" width="400" height="300">
+    <img src="https://github.com/Chinnasf/FUSION-EP-Master-Thesis/assets/31081252/4f0e520f-429c-43f8-835e-4914329b1deb" alt="Zoom_rotationchange_in_NUSTAR_RHOSTAR_Q95" width="400" height="300">
   <img src="https://github.com/Chinnasf/FUSION-EP-Master-Thesis/assets/31081252/d1779ba8-5f4f-4d95-ac00-0112ae7369db" alt="removeSPH_change_in_NUSTAR_RHOSTAR_BETASTAR" width="400" height="300">
   <br>
-  <em>Complete dataset (left) vs dataset without spherical tokamaks (right)</em>
+  <em>Complete dataset (left) vs dataset without spherical tokamaks (right). At the center is the complete dataset for $\alpha_R \sim 0.6357$.</em>
 </p>
 
 
