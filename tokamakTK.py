@@ -131,7 +131,7 @@ def plot_tok_comparison(data1,data2,DB5):
 
 def get_colors_per_category(DB5):
 	TD_colors = plt.cm.get_cmap('flag', 20) #Paired, flag
-	colors_ = sns.color_palette('viridis', 20)
+	colors_ = sns.color_palette('tab20', 20)
 	CSS_colors = [mcolors.to_hex(TD_colors(i)) for i in range(20)]
 
 	# Needed for Improved Visualization in 2D Plots
