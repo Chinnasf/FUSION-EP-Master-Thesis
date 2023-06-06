@@ -27,8 +27,8 @@ has decreased with the updated database [DB5 version 2.3](https://dataspace.prin
 
 </p>
 
-### Some Results
+# Some Results
 
-[Gif](https://drive.google.com/file/d/1AmPOc3kc6CSbPMaCUzJbZgQqiBW5myTm/view?usp=sharing)
 
+![change_in_NUSTAR_RHOSTAR_Q95](https://github.com/Chinnasf/FUSION-EP-Master-Thesis/assets/31081252/d19a416b-769f-4973-b3ba-455004f50249)
 
