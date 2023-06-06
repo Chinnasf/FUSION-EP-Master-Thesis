@@ -32,7 +32,7 @@ has decreased with the updated database [DB5 version 2.3](https://dataspace.prin
   <img src="https://github.com/Chinnasf/FUSION-EP-Master-Thesis/assets/31081252/d1779ba8-5f4f-4d95-ac00-0112ae7369db" alt="removeSPH_change_in_NUSTAR_RHOSTAR_BETASTAR" width="400" height="300">
   <img src="https://github.com/Chinnasf/FUSION-EP-Master-Thesis/assets/31081252/4f0e520f-429c-43f8-835e-4914329b1deb" alt="Zoom_rotationchange_in_NUSTAR_RHOSTAR_Q95" width="400" height="300">
   <br>
-  <em>Complete dataset (left) vs dataset without spherical tokamaks (right) showing the normalized plasma beta (BETASTAR), normalized ion gyroradius (RHOSTAR), and normalized ion collision frequency (NUSTAR). At the bottom center is the complete dataset for an alpha-R of approx. 0.6357; for the nlasma safety factor at the 95% poloidal flux surface (Q95), RHOSTAR and NUSTAR.</em>
+  <em>Complete dataset (left) vs dataset without spherical tokamaks (right) showing the normalized plasma beta (BETASTAR), normalized ion gyroradius (RHOSTAR), and normalized ion collision frequency (NUSTAR). At the bottom center is the complete dataset for an alpha-R of approx. 0.6357; for the plasma safety factor at the 95% poloidal flux surface (Q95), RHOSTAR and NUSTAR.</em>
 </p>
 
 
