@@ -130,8 +130,8 @@ def plot_tok_comparison(data1,data2,DB5):
 
 
 def get_colors_per_category(DB5):
-	TD_colors = plt.cm.get_cmap('flag', 20) #Paired, flag
-	colors_ = sns.color_palette('tab20', 20)
+	TD_colors = plt.cm.get_cmap('tab20', 20) # Paired, flag
+	colors_ = sns.color_palette('tab20', 20) # tab20
 	CSS_colors = [mcolors.to_hex(TD_colors(i)) for i in range(20)]
 
 	# Needed for Improved Visualization in 2D Plots
@@ -505,7 +505,10 @@ def scatter_data_comparison(data, params):
 				 ha='left', va='center', rotation='vertical', fontsize=15
 				)
 		axs[0, 1].set_title("Decreasing Dataset\n", fontsize=18)
-		axs[1, 1].set_title("Unaffected Dataset\n", fontsize=18);
+		axs[1, 1].set_title("Unaffected Dataset\n", fontsize=18)
+
+		axs[0, 1].grid(alpha=0.5)
+		axs[1, 1].grid(alpha=0.5)
 
 		if save_fig:
 			plt.savefig(fig_path+fig_name__+"."+fig_format, format=fig_format, dpi=800, bbox_inches='tight');
