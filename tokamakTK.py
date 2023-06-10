@@ -129,9 +129,9 @@ def plot_tok_comparison(data1,data2,DB5):
     plt.show()
 
 
-def get_colors_per_category(DB5):
-	TD_colors = plt.cm.get_cmap('tab20', 20) # Paired, flag
-	colors_ = sns.color_palette('tab20', 20) # tab20
+def get_colors_per_category(DB5,c="tab20"):
+	TD_colors = plt.cm.get_cmap(c, 20) # Paired, flag
+	colors_ = sns.color_palette(c, 20) # tab20
 	CSS_colors = [mcolors.to_hex(TD_colors(i)) for i in range(20)]
 
 	# Needed for Improved Visualization in 2D Plots
@@ -191,8 +191,9 @@ def clean_categorical_data(db5):
 	DB5["DIVNAME"]   = DB5["DIVNAME"].str.replace("NONAME","UNKNOWN",regex=False)
 
 	DB5["DIVMAT"] = DB5["DIVMAT"].str.replace("CC","C",regex=False)
-	DB5["DIVMAT"] = DB5["DIVMAT"].str.replace("TI1","TI12",regex=False)
-	DB5["DIVMAT"] = DB5["DIVMAT"].str.replace("TI2","TI12",regex=False)
+	DB5["DIVMAT"] = DB5["DIVMAT"].str.replace("(TI1)|(TI2)","TI",regex=True)
+	DB5["DIVMAT"] = DB5["DIVMAT"].str.replace("C-W","C/W",regex=False)
+	DB5["DIVMAT"] = DB5["DIVMAT"].str.replace("NONE","UNKNOWN",regex=True)
 
 	DB5["DIVNAME"] = DB5["DIVNAME"].str.replace("(DIV-I)|(DV-IPRE)|(DV-IPOST)",
 												"DV-I",regex=True)
@@ -204,6 +205,9 @@ def clean_categorical_data(db5):
 
 	DB5["ICSCHEME"]   = DB5["ICSCHEME"].str.replace("OFF","NONE",regex=False)
 	DB5["HYBRID"]   = DB5["HYBRID"].str.replace("HYBRID","YES",regex=False)
+
+	DB5["WALMAT"] = DB5["WALMAT"].str.replace("CSS","C/SS",regex=True)
+	DB5["WALMAT"] = DB5["WALMAT"].str.replace("C-W","C/W",regex=True)
 
 
 	DB5["EVAP"] = DB5["EVAP"].str.replace("CARBH","C-H",regex=True)
