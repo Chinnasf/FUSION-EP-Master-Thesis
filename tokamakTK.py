@@ -193,6 +193,7 @@ def clean_categorical_data(db5):
 	DB5["DIVMAT"] = DB5["DIVMAT"].str.replace("CC","C",regex=False)
 	DB5["DIVMAT"] = DB5["DIVMAT"].str.replace("(TI1)|(TI2)","TI",regex=True)
 	DB5["DIVMAT"] = DB5["DIVMAT"].str.replace("C-W","C/W",regex=False)
+	DB5["LIMMAT"] = DB5["LIMMAT"].str.replace("C-W","C/W",regex=False)
 	DB5["DIVMAT"] = DB5["DIVMAT"].str.replace("NONE","UNKNOWN",regex=True)
 
 	DB5["DIVNAME"] = DB5["DIVNAME"].str.replace("(DIV-I)|(DV-IPRE)|(DV-IPOST)",
