@@ -18,7 +18,7 @@ $$
 $$
 
 
-has decreased with the updated database [DB5 version 2.3](https://dataspace.princeton.edu/handle/88435/dsp01m900nx49h), compared to the 1998 database used to design [ITER](https://www.iter.org/). Back then, it was observed that $\alpha_R \sim 2$; now, $\alpha_R \sim 1.4$. My task is to answer the question: why? -- Why is this decrease observed? Does it concern data-related issues or particle physics inside the tokamaks?
+has decreased with the updated database [DB5 version 2.3](https://dataspace.princeton.edu/handle/88435/dsp01m900nx49h), compared to the 1998 database used to design [ITER](https://www.iter.org/). Back then, it was observed that $\alpha_R \sim 2$; now, $\alpha_R \sim 1.4$. **My task is to answer the question: why? -- Why is this decrease observed? Does it concern data-related issues or particle physics inside the tokamaks?**
 
 
 <p align="center">
